@@ -1,0 +1,10 @@
+^C:\LUCKYBILLIARD\BUILD\CMAKEFILES\10B73A3E9931E1B3F641F9E3367A05C3\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/luckybilliard -BC:/luckybilliard/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/luckybilliard/build/LuckyBilliard.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
