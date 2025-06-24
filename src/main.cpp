@@ -1,71 +1,11 @@
-/*#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <iostream>
-
-int main() 
-{ 
-    // 1. Инициализация GLFW
-    if(!glfwInit())
-    {
-        std::cerr << "Failed to initialize GLFW" << std::endl;
-        return -1;
-    }
-
-    // 2. Настройка окна
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    // 3. Создание окна
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Lucky Billiard", NULL, NULL);
-    if(!window) 
-    {
-        std::cerr << "Failed to create window" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
-    // 4. Делаем окно текущим контекстом
-    glfwMakeContextCurrent(window);
-
-    // 5. Инициализация GLAD
-    if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        std::cerr << "Failed to initialize GLAD" << std::endl;
-        return -1;
-    }
-
-     // 6. Главный цикл игры
-    while(!glfwWindowShouldClose(window)) {
-        // Очистка экрана
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        glBegin(GL_TRIANGLES);
-        glColor3f(1.0f, 0.0f, 0.0f); // Красный
-        glVertex2f(-0.5f, -0.5f);
-        glColor3f(0.0f, 1.0f, 0.0f); // Зелёный
-        glVertex2f(0.5f, -0.5f);
-        glColor3f(0.0f, 0.0f, 1.0f); // Синий
-        glVertex2f(0.0f, 0.5f);
-        glEnd();
-
-        // Обмен буферов и обработка событий
-        glfwSwapBuffers(window);
-        glfwPollEvents();
-    }
-
-    // 7. Очистка
-    glfwTerminate();
-    return 0;
-}
-    */
-
-
-    //cmake .. -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake
-    //cmake --build . --config Debug
-    //.\Debug\game.exe
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <iostream>
+
+//cmake .. -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake
+//cmake --build . --config Debug
+//.\Debug\game.exe
 
 // Размеры окна
 const unsigned int SCR_WIDTH = 1400;
@@ -92,26 +32,52 @@ const char* fragmentShaderSource = R"(
 
 // Позиция треугольника
 glm::vec2 trianglePos(0.0f);
-float triangleSpeed = 0.005f;
+float triangleSpeed = 0.001f;
 glm::vec3 triangleColor(1.0f, 0.5f, 0.2f); // Оранжевый
+float rotationAngle = 0.0f;
 
 void processInput(GLFWwindow* window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
     // Управление WASD
+    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+        triangleSpeed = 0.0015f;
+    else
+        triangleSpeed = 0.001f;
+
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        trianglePos.y += triangleSpeed;
+        if (trianglePos.y<1) trianglePos.y += triangleSpeed;
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        trianglePos.y -= triangleSpeed;
+        if (trianglePos.y>-1) trianglePos.y -= triangleSpeed;
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        trianglePos.x -= triangleSpeed;
+        if (trianglePos.x>-1) trianglePos.x -= triangleSpeed;
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        trianglePos.x += triangleSpeed;
+        if (trianglePos.x<1) trianglePos.x += triangleSpeed;
+
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) 
+    {
+    rotationAngle += 0.10f; // Поворачиваем влево
+    } 
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) 
+    {
+    rotationAngle -= 0.10f; // Поворачиваем вправо
+    }
 
 
     if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS)
-        triangleColor.
+        triangleColor.r += 0.0001f;
+    if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
+        triangleColor.g += 0.0001f;
+    if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
+        triangleColor.b += 0.0001f;
+
+    if (glfwGetKey(window, GLFW_KEY_N) == GLFW_PRESS)
+        triangleColor.r -= 0.0001f;
+    if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS)
+        triangleColor.g -= 0.0001f;
+    if (glfwGetKey(window, GLFW_KEY_COMMA) == GLFW_PRESS)
+        triangleColor.b -= 0.0001f;
 }
 
 int main() {
@@ -127,7 +93,7 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // Создание окна
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "My OpenGL Game", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Lucky Billiard", NULL, NULL);
     if (!window) {
         std::cerr << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -159,12 +125,13 @@ int main() {
     glDeleteShader(fragmentShader);
 
     // Вершины треугольника
+    float side = sqrt((0.4f*0.4f)+(0.4f*0.4f));
     float vertices[] = {
-        -0.5f, -0.5f, 0.0f, // левый угол
-         0.5f, -0.5f, 0.0f, // правый угол
-         0.0f,  0.5f, 0.0f  // верхний угол
+        -0.2f, -0.2f, 0.0f, // левый угол
+         0.2f, -0.2f, 0.0f, // правый угол
+         0.0f,  0.2f, 0.0f  // верхний угол
     };
-
+    
     // Буферы
     unsigned int VBO, VAO;
     glGenVertexArrays(1, &VAO);
@@ -183,6 +150,10 @@ int main() {
     while (!glfwWindowShouldClose(window)) {
         // Обработка ввода
         processInput(window);
+
+        if (trianglePos.y>-1) {
+        trianglePos.y -= 0.001f; // Гравитация
+        }
 
         // Рендеринг
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -212,4 +183,4 @@ int main() {
 
     glfwTerminate();
     return 0;
-}
+} 
