@@ -13,7 +13,7 @@ find_package(glad CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 
 # Создаём исполняемый файл
-add_executable(game src/main.cpp)
+add_executable(game src/twice.cpp)
 
 # Подключаем библиотеки
 target_link_libraries(game PRIVATE

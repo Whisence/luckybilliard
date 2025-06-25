@@ -385,7 +385,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="C:\luckybilliard\src\main.cpp" />
+    <ClCompile Include="C:\luckybilliard\src\twice.cpp" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
